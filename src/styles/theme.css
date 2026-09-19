@@ -1,0 +1,212 @@
+@import 'tailwindcss';
+
+/*
+ * Strażnik Trasy — design tokens.
+ * Raw values live on :root (switched per color scheme); Tailwind utilities
+ * reference them through `@theme inline`, so `bg-surface`, `text-label-2` etc.
+ * follow dark/light automatically.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* iOS system backgrounds (dark, grouped) */
+  --bg: #000000;
+  --surface: #1c1c1e;
+  --surface-2: #2c2c2e;
+  --surface-3: #3a3a3c;
+  --separator: rgb(84 84 88 / 0.6);
+
+  /* Labels */
+  --label: rgb(255 255 255 / 0.94);
+  --label-2: rgb(235 235 245 / 0.62);
+  --label-3: rgb(235 235 245 / 0.32);
+
+  /* Fills */
+  --fill: rgb(120 120 128 / 0.36);
+  --fill-2: rgb(120 120 128 / 0.24);
+
+  /* Materials (nav/tab bars) */
+  --material: rgb(22 22 24 / 0.72);
+  --material-border: rgb(255 255 255 / 0.08);
+
+  /* Accents */
+  --accent: #ffc21a; /* żółć drogowa */
+  --accent-ink: #1a1400; /* text on accent */
+  --blue: #0a84ff;
+  --green: #30d158;
+  --red: #ff453a;
+  --orange: #ff9f0a;
+  --purple: #bf5af2;
+
+  --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 8px 24px -12px rgb(0 0 0 / 0.6);
+
+  /* Layout constants — fixed heights, so nothing shifts between screens */
+  --nav-h: 44px;
+  --tab-h: 56px;
+  --gutter: 20px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --bg: #f2f2f7;
+    --surface: #ffffff;
+    --surface-2: #f2f2f7;
+    --surface-3: #e5e5ea;
+    --separator: rgb(60 60 67 / 0.29);
+    --label: rgb(0 0 0 / 0.92);
+    --label-2: rgb(60 60 67 / 0.62);
+    --label-3: rgb(60 60 67 / 0.32);
+    --fill: rgb(120 120 128 / 0.2);
+    --fill-2: rgb(120 120 128 / 0.12);
+    --material: rgb(249 249 249 / 0.78);
+    --material-border: rgb(0 0 0 / 0.08);
+    --accent: #f5b400;
+    --accent-ink: #1a1400;
+    --blue: #007aff;
+    --green: #34c759;
+    --red: #ff3b30;
+    --orange: #ff9500;
+    --purple: #af52de;
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -14px rgb(0 0 0 / 0.18);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-separator: var(--separator);
+  --color-label: var(--label);
+  --color-label-2: var(--label-2);
+  --color-label-3: var(--label-3);
+  --color-fill: var(--fill);
+  --color-fill-2: var(--fill-2);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-red: var(--red);
+  --color-orange: var(--orange);
+  --color-purple: var(--purple);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+  --font-rounded: ui-rounded, 'SF Pro Rounded', -apple-system, system-ui, sans-serif;
+
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+
+  --shadow-card: var(--shadow-card);
+
+  /* iOS type scale (size / line-height / tracking) */
+  --text-large-title: 34px;
+  --text-large-title--line-height: 41px;
+  --text-large-title--letter-spacing: 0.01em;
+  --text-title-1: 28px;
+  --text-title-1--line-height: 34px;
+  --text-title-2: 22px;
+  --text-title-2--line-height: 28px;
+  --text-title-3: 20px;
+  --text-title-3--line-height: 25px;
+  --text-headline: 17px;
+  --text-headline--line-height: 22px;
+  --text-body: 17px;
+  --text-body--line-height: 22px;
+  --text-callout: 16px;
+  --text-callout--line-height: 21px;
+  --text-subhead: 15px;
+  --text-subhead--line-height: 20px;
+  --text-footnote: 13px;
+  --text-footnote--line-height: 18px;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption-2: 11px;
+  --text-caption-2--line-height: 13px;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--label);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 22px;
+    letter-spacing: -0.022em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+
+  button,
+  [role='button'] {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Continuous-curvature corners where supported (Safari 26+/Chromium), plain radius elsewhere */
+  .squircle {
+    corner-shape: superellipse(1.6);
+  }
+
+  .material {
+    background: var(--material);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pressable {
+    transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out);
+  }
+  .pressable:active {
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressable:active {
+    transform: none;
+    opacity: 0.7;
+  }
+}
