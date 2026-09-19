@@ -5,11 +5,13 @@ import { AppFrame } from './design/AppFrame';
 import { TabBar, TABS } from './design/TabBar';
 import { useTrip } from './game/selectors';
 import { enableWakeLock } from './lib/wakeLock';
-import { Challenges } from './screens/Challenges';
+import { Toaster } from './design/Toast';
+import { Challenges } from './screens/challenges/Challenges';
 import { Home } from './screens/Home';
-import { Plates } from './screens/Plates';
+import { MemorySheet } from './screens/memory/MemorySheet';
+import { Plates } from './screens/plates/Plates';
 import { Radar } from './screens/radar/Radar';
-import { Stories } from './screens/Stories';
+import { Stories } from './screens/stories/Stories';
 import { TripSetup } from './screens/TripSetup';
 
 const SCREENS: Record<string, ComponentType> = {
@@ -62,6 +64,8 @@ function Shell() {
       })}
       <TabBar active={active} onSelect={(p) => navigate(p)} />
       <TripSetup />
+      <MemorySheet />
+      <Toaster />
     </>
   );
 }

@@ -12,7 +12,8 @@ import { useLeaderboard, usePlayers, useRadar } from '../../game/selectors';
 import { game } from '../../game/store';
 import { haptics } from '../../lib/haptics';
 import { spring } from '../../lib/motion';
-import { useUi } from '../../ui/uiStore';
+import { RECYCLED_TOAST, useUi } from '../../ui/uiStore';
+import { MemoryChip } from '../memory/MemoryChip';
 import { BingoOverlay } from './BingoOverlay';
 import { RadarCard } from './RadarCard';
 import { WhoSpottedSheet } from './WhoSpottedSheet';
@@ -52,7 +53,7 @@ export function Radar() {
     setSpin((s) => s + 1);
     setConfirmNew(false);
     setBingoOpen(false);
-    game.newRadarBoard();
+    if (game.newRadarBoard()) useUi.getState().showToast(RECYCLED_TOAST);
   };
   const requestNewBoard = () => (claimedCount > 0 && !complete ? setConfirmNew(true) : newBoard());
 
@@ -70,6 +71,7 @@ export function Radar() {
         </NavButton>
       }
     >
+      <MemoryChip game="radar" />
       <Progress
         count={claimedCount}
         colors={board.objectIds.map((id) => (board.claims[id] ? byId[board.claims[id].playerId]?.color : undefined))}

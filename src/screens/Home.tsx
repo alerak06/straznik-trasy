@@ -1,4 +1,4 @@
-import { Check, ChevronRight, Crown, Ghost, Maximize, Mic, Radar, RectangleHorizontal, Share, Smartphone, Users, type LucideIcon } from 'lucide-react';
+import { Check, ChevronRight, Crown, Maximize, Share, Smartphone, Users, type LucideIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -8,29 +8,16 @@ import { Button } from '../design/Button';
 import { Group, Row } from '../design/Group';
 import { Screen } from '../design/Screen';
 import { Sheet } from '../design/Sheet';
+import { GAME_META, GAME_ORDER } from '../game/content';
 import { ROLE_LABEL } from '../game/players';
+import type { GameId } from '../game/types';
 import { useLeaderboard, usePlayers, useTrip } from '../game/selectors';
 import { game, useGameStore } from '../game/store';
 import { haptics } from '../lib/haptics';
 import { spring } from '../lib/motion';
 import { useUi } from '../ui/uiStore';
+import { MemoryGroup } from './memory/MemoryGroup';
 import { RoadHero } from './RoadHero';
-
-interface GameLink {
-  path: string;
-  title: string;
-  subtitle: string;
-  icon: LucideIcon;
-  tint: string;
-  ready: boolean;
-}
-
-const GAMES: GameLink[] = [
-  { path: '/radar', title: 'Radar Obiektów', subtitle: 'Wypatrz 5 rzeczy za oknem', icon: Radar, tint: 'var(--green)', ready: true },
-  { path: '/tablice', title: 'Sprawa Tablicy', subtitle: 'Rozwiń skrót z rejestracji', icon: RectangleHorizontal, tint: 'var(--blue)', ready: false },
-  { path: '/historie', title: 'Czarne Historie', subtitle: 'Zagadki dla Mistrza Gry', icon: Ghost, tint: 'var(--purple)', ready: false },
-  { path: '/wyzwania', title: 'Licznik Wyzwań', subtitle: 'Bez rąk — dla kierowcy też', icon: Mic, tint: 'var(--orange)', ready: false },
-];
 
 export function Home() {
   const trip = useTrip();
@@ -39,6 +26,7 @@ export function Home() {
     <Screen title="Strażnik Trasy" eyebrow={trip ? `W trasie · ${formatDuration(minutes)}` : 'Gry w podróży'}>
       {trip ? <ActiveTrip /> : <Welcome />}
       <GamesList />
+      <MemoryGroup />
       {trip && <EndTrip />}
       <InstallHint />
     </Screen>
@@ -55,7 +43,7 @@ function Welcome() {
           <div className="px-5 pb-5 pt-4">
             <h2 className="text-title-2 font-bold">Gotowi do drogi?</h2>
             <p className="mt-1 text-subhead text-label-2">
-              Cztery gry na całą trasę. Wystarczy jeden telefon — pasażer prowadzi, kierowca patrzy na drogę i gra na głos.
+              Cztery gry i ponad tysiąc zagadek, pytań i wyzwań — nic się nie powtarza. Wystarczy jeden telefon — pasażer prowadzi, kierowca patrzy na drogę i gra na głos.
             </p>
             <Button block className="mt-5" onClick={openSetup}>
               Nowa trasa
@@ -194,27 +182,36 @@ function GamesList() {
   const navigate = useNavigate();
   return (
     <Group header="Gry">
-      {GAMES.map((g, i) => (
-        <button
-          key={g.path}
-          type="button"
-          onClick={() => navigate(g.path)}
-          className="block w-full text-left transition-colors duration-150 active:bg-fill-2"
-        >
-          <Row last={i === GAMES.length - 1}>
-            <IconTile icon={g.icon} tint={g.tint} />
-            <div className="min-w-0 flex-1">
-              <div className="text-body">{g.title}</div>
-              <div className="truncate text-footnote text-label-2">{g.subtitle}</div>
-            </div>
-            {!g.ready && <span className="text-footnote text-label-3">Wkrótce</span>}
-            <ChevronRight size={18} className="text-label-3" aria-hidden />
-          </Row>
-        </button>
-      ))}
+      {GAME_ORDER.map((id, i) => {
+        const g = GAME_META[id];
+        return (
+          <button
+            key={id}
+            type="button"
+            onClick={() => navigate(g.path)}
+            className="block w-full text-left transition-colors duration-150 active:bg-fill-2"
+          >
+            <Row last={i === GAME_ORDER.length - 1}>
+              <IconTile icon={g.icon} tint={g.tint} />
+              <div className="min-w-0 flex-1">
+                <div className="text-body">{g.title}</div>
+                <div className="truncate text-footnote text-label-2">{GAME_SUBTITLE[id]}</div>
+              </div>
+              <ChevronRight size={18} className="text-label-3" aria-hidden />
+            </Row>
+          </button>
+        );
+      })}
     </Group>
   );
 }
+
+const GAME_SUBTITLE: Record<GameId, string> = {
+  radar: 'Wypatrz 5 rzeczy za oknem',
+  plates: 'Rozwiń skrót z tablicy rejestracyjnej',
+  stories: 'Mroczne zagadki dla Mistrza Gry',
+  challenges: 'Pytania i wyzwania na głos',
+};
 
 function IconTile({ icon: Icon, tint }: { icon: LucideIcon; tint: string }) {
   return (

@@ -1,22 +1,8 @@
-import { mulberry32, shuffle } from '../lib/random';
-import { BINGO_BONUS, GOLDEN_MULTIPLIER, RADAR_BY_ID, RADAR_OBJECTS, type Rarity } from './data/radarObjects';
+import { BINGO_BONUS, GOLDEN_MULTIPLIER, RADAR_BY_ID } from './data/radarObjects';
 import type { RadarBoard } from './types';
 
 export const BOARD_SIZE = 5;
 export const GOLDEN_INDEX = 4;
-
-const byRarity = (r: Rarity) => RADAR_OBJECTS.filter((o) => o.rarity === r);
-
-/** Deterministic board: 2 common, 1 medium, 1 rare + a golden rare/legendary one. */
-export function generateBoard(id: string, seed: number): RadarBoard {
-  const rand = mulberry32(seed);
-  const pick = (r: Rarity, n: number) => shuffle(byRarity(r), rand).slice(0, n);
-  const regular = shuffle([...pick('częsty', 2), ...pick('średni', 1), ...pick('rzadki', 1)], rand);
-  const taken = new Set(regular.map((o) => o.id));
-  const goldenPool = [...byRarity('rzadki'), ...byRarity('legendarny')].filter((o) => !taken.has(o.id));
-  const golden = shuffle(goldenPool, rand)[0];
-  return { id, seed, objectIds: [...regular.map((o) => o.id), golden.id], claims: {}, bingo: null };
-}
 
 export function pointsFor(board: RadarBoard, objectId: string) {
   const base = RADAR_BY_ID[objectId]?.points ?? 0;

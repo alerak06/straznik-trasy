@@ -33,6 +33,9 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        // Bundle names are stable (no hash), so every file must carry a content
+        // revision — otherwise an installed app would never pick up a new deploy.
+        dontCacheBustURLsMatching: /(?!)/,
         navigateFallback: 'index.html',
       },
     }),
