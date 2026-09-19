@@ -4,13 +4,15 @@ import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  // Relative base: works on Hatchable (served from /) and inside Capacitor (file://).
-  base: './',
+  // Web (Hatchable) is served from the root. Capacitor builds can set VITE_BASE=./ later.
+  base: process.env.VITE_BASE ?? '/',
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // Inline registration keeps the app a single classic-script bundle (see build.output).
+      injectRegister: 'inline',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
         name: 'Strażnik Trasy',
@@ -38,9 +40,15 @@ export default defineConfig({
   build: {
     target: 'es2022',
     assetsInlineLimit: 0,
+    // Emit a real stylesheet (linked in <head>) instead of JS-injected CSS: no flash, no shift.
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
         // Stable file names keep the Hatchable upload set predictable between deploys.
+        // Hatchable's deploy validator parses public JS as classic scripts, so ship one
+        // IIFE bundle with no import/export/import.meta.
+        format: 'iife',
+        inlineDynamicImports: true,
         entryFileNames: 'assets/app.js',
         chunkFileNames: 'assets/[name].js',
         assetFileNames: 'assets/[name][extname]',
