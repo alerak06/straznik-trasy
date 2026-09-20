@@ -7,10 +7,12 @@ Gry w podróży dla całego auta — mobile-first PWA z natywnym, iOS-owym wygl�
 - **Kilka telefonów** (faza 2) — pokój z kodem, synchronizacja przez Hatchable realtime.
 
 **Gry** (wszystkie grywalne):
-- **Radar Obiektów** — 150 obiektów do wypatrzenia (plansza 5 + złoty ×2, bingo).
-- **Sprawa Tablicy** — 161 tematów; tablica PL, duża klawiatura, propozycje, głosowanie.
-- **Czarne Historie** — 104 zagadki; talia do przesuwania, podpowiedź, rozwiązanie po przytrzymaniu.
-- **Licznik Wyzwań** — 632 pozycje (348 pytań, 85 przysłów, 62 zagadki, 137 wyzwań); czytanie na głos, odliczanie.
+- **Radar Obiektów** — 260 obiektów (plansza 5 + złoty ×2, bingo). 37 plansz bez powtórki.
+- **Sprawa Tablicy** — 322 tematy; tablica PL, duża klawiatura, propozycje, głosowanie.
+- **Czarne Historie** — 198 zagadek; talia do przesuwania, podpowiedź, rozwiązanie po przytrzymaniu.
+- **Licznik Wyzwań** — 1143 pozycje (627 pytań, 148 przysłów, 107 zagadek, 261 wyzwań); czytanie na głos, odliczanie.
+
+Razem 1923 pozycje treści.
 
 **Pamięć gier** — każde urządzenie pamięta, co już było (`src/game/memory.ts`). Losowanie bierze tylko
 nieużyte treści, a po wyczerpaniu puli wraca do najdawniej użytych. Na Starcie i w każdej grze widać
